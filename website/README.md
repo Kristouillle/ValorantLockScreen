@@ -16,3 +16,5 @@ Static product website for Valorant Lock Screen.
 - It is suitable for static hosting or for later mounting behind the backend/domain.
 - Replace the legal placeholder copy before any public launch.
 - If you decide to embed the backend simulator later, link or mount `/simulate` from the production backend rather than rebuilding the simulator UI inside this site.
+- For local preview, open `website/index.html` directly in a browser.
+- For launch, serve this site over HTTPS on the same domain family as the production backend if possible.

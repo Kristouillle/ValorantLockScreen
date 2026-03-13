@@ -10,6 +10,9 @@ The backend reads environment variables from `backend/.env` automatically. A sta
 - normalizes matches into the app's JSON shape
 - caches the feed in memory to reduce upstream traffic
 - optionally falls back to preview fixtures when the Riot fetch fails
+- registers Live Activity push tokens
+- registers WidgetKit push tokens
+- sends APNs pushes for both Live Activities and widgets when the match feed changes
 
 ## Run locally
 
@@ -71,6 +74,39 @@ The iOS app must also be signed with Push Notifications enabled. The current cod
 - `POST /api/v1/live-activities/register`
 - `POST /api/v1/live-activities/unregister`
 
+## Widget Pushes
+
+The backend can also register WidgetKit push tokens and send widget reload pushes through APNs.
+
+These pushes use the same APNs `.p8` token auth values as the Live Activity path:
+
+- `APNS_ENVIRONMENT`
+- `APNS_TEAM_ID`
+- `APNS_KEY_ID`
+- `APNS_BUNDLE_ID`
+- `APNS_PRIVATE_KEY`
+
+The widget APNs topic is derived from the app bundle id, not the widget bundle id:
+
+- `${APNS_BUNDLE_ID}.push-type.widgets`
+
+The widget extension uploads push tokens to:
+
+- `POST /api/v1/widget-push/register`
+
+Widget pushes are background widget reload triggers, not visible alert notifications.
+
+## Health and debug checks
+
+`GET /health` includes:
+
+- `apnsConfigured`
+- `widgetPushConfigured`
+- `liveActivityRegistrationCount`
+- `widgetPushRegistrationCount`
+
+`GET /simulate` also shows whether APNs is configured and how many Live Activities / widgets are currently registered.
+
 ## API
 
 `GET /health`
@@ -82,6 +118,8 @@ The iOS app must also be signed with Push Notifications enabled. The current cod
 `POST /api/v1/live-activities/register`
 
 `POST /api/v1/live-activities/unregister`
+
+`POST /api/v1/widget-push/register`
 
 Use `/simulate` in a browser to create an in-memory fake live match, increment round scores, increment map wins, rename the current map, or clear the simulation. The simulated match is merged into `/api/v1/matches`, so the iOS app will see it as if it were part of the live feed.
 
@@ -95,3 +133,15 @@ The response is a `MatchEnvelope` JSON payload with ISO-8601 timestamps so the i
 4. Refresh the app once so it starts the Live Activity and uploads the push token.
 5. Lock the phone.
 6. Use the `/simulate` buttons to increment rounds/maps and watch the Live Activity update via APNs.
+
+## Suggested Widget Push Test Flow
+
+1. Start the backend with APNs env vars configured.
+2. Install the app on a physical iPhone and add the home widget.
+3. Open the app once so the widget can read shared settings and the extension can register its widget push token.
+4. Check `GET /health` and confirm `widgetPushRegistrationCount` is greater than `0`.
+5. Use `/simulate` to change the live match state.
+6. Watch backend logs for:
+   - `widget_push_registered`
+   - `widget_push_started`
+   - `widget_push_failed` if APNs rejects a token

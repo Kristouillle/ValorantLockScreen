@@ -14,7 +14,7 @@ enum AppSecrets {
             ?? URL(string: defaultBackendBaseURLString)!
     }
 
-    static let defaultBackendBaseURLString = "http://192.168.1.7:8787/"
+    static let defaultBackendBaseURLString = "http://127.0.0.1:8787/"
 
     static func normalizedBackendBaseURLString(_ rawValue: String?) -> String? {
         resolvedBackendBaseURL(from: rawValue)?.absoluteString

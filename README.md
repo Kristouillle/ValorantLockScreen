@@ -37,15 +37,52 @@ If you want to keep raw source files outside Xcode first, store them in a folder
    - `cd backend`
    - `npm start`
    - for a physical iPhone on your LAN, run with `HOST=0.0.0.0 npm start`
+   - optional APNs config for automatic Live Activity and widget pushes lives in `backend/.env`
 2. Open `ValorantLockScreen.xcodeproj` in Xcode.
 3. Update the signing team and bundle identifiers.
 4. Update the app group identifier in:
    - `ValorantLockScreenApp/ValorantLockScreen.entitlements`
    - `ValorantLockScreenWidget/ValorantLockScreenWidget.entitlements`
    - `Shared/Storage/AppGroup.swift`
-5. If you are running on a physical iPhone, point `VALORANT_BACKEND_BASE_URL` at your Mac's LAN IP or a deployed HTTPS backend.
-6. Run the app on an iPhone running iOS 17 or newer.
-7. Leave preview fallback enabled only if you want the backend to serve mock fixtures when Riot fetches fail.
+5. In Xcode, enable required capabilities:
+   - app target: `Push Notifications`, `App Groups`
+   - widget target: `Push Notifications`, `App Groups`
+6. If you are running on a physical iPhone, point `VALORANT_BACKEND_BASE_URL` at your Mac's LAN IP or a deployed HTTPS backend.
+7. Run the app on an iPhone.
+   - app + Live Activity flow: iOS 17 or newer
+   - widget push refreshes: require the newer widget target deployment version currently configured in the project
+8. Leave preview fallback enabled only if you want the backend to serve mock fixtures when Riot fetches fail.
+
+## First successful device test
+
+1. Start the backend and confirm `GET /health` returns `ok: true`.
+2. Install the app on a physical iPhone with both app and widget capabilities enabled.
+3. Add the home-screen widget manually.
+4. Open the app once, select teams, and confirm the backend URL points at your running backend.
+5. Check `GET /health` again and verify registration counts:
+   - `liveActivityRegistrationCount`
+   - `widgetPushRegistrationCount`
+6. Open `GET /simulate` in a browser, create a simulated live match, then use it to test:
+   - app refresh
+   - Live Activity pushes
+   - widget push refreshes
+
+## Push behavior
+
+- Live Activity updates come from ActivityKit/APNs and are the main live-score surface.
+- Home-screen and lock-screen widgets can refresh via widget pushes, but they are still more budgeted/opportunistic than Live Activities.
+- Both push paths use the backend's APNs `.p8` token auth configuration.
+
+## Website
+
+- `website/` contains the static marketing site and legal pages.
+- You can preview it locally by opening `website/index.html` directly in a browser.
+- `website/privacy.html` and `website/terms.html` are still placeholders and should be replaced before public launch.
+
+## Production notes
+
+- For real distribution, host the backend on HTTPS and point the app at that deployed backend instead of a LAN IP.
+- The website, privacy policy, and terms pages are part of the eventual Riot production-key and App Store submission path.
 
 ## Project layout
 
