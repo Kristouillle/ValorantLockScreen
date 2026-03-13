@@ -13,6 +13,7 @@ final class MatchPollingViewModel: ObservableObject {
     private let cacheStore = MatchCacheStore()
     private let coordinator = LiveActivityCoordinator()
     private var autoRefreshTask: Task<Void, Never>?
+    private let foregroundRefreshInterval: Duration = .seconds(30)
 
     func configure(with settingsStore: SettingsStore) async {
         self.settingsStore = settingsStore
@@ -31,7 +32,7 @@ final class MatchPollingViewModel: ObservableObject {
             guard let self else { return }
 
             while Task.isCancelled == false {
-                try? await Task.sleep(for: .seconds(5))
+                try? await Task.sleep(for: foregroundRefreshInterval)
                 if Task.isCancelled { return }
                 await self.refresh()
             }

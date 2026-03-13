@@ -5,6 +5,7 @@ import { APNSLiveActivityService } from "./apnsLiveActivityService.mjs";
 import { createLogger, summarizeMatches } from "./logger.mjs";
 import { LiveActivityRegistryService } from "./liveActivityRegistryService.mjs";
 import { MatchFeedService } from "./matchFeedService.mjs";
+import { FixedWindowRateLimiter } from "./rateLimiterService.mjs";
 import { RiotScheduleService } from "./riotScheduleService.mjs";
 import { SimulatorService } from "./simulatorService.mjs";
 import { WidgetPushRegistryService } from "./widgetPushRegistryService.mjs";
@@ -14,10 +15,12 @@ const logger = createLogger({
 });
 
 const liveActivityRegistry = new LiveActivityRegistryService({
+  registrationTtlMs: config.registrationTtlMs,
   logger
 });
 
 const widgetPushRegistry = new WidgetPushRegistryService({
+  registrationTtlMs: config.registrationTtlMs,
   logger
 });
 
@@ -47,6 +50,16 @@ const matchFeedService = new MatchFeedService({
   logger
 });
 
+const matchRequestRateLimiter = new FixedWindowRateLimiter({
+  limit: config.matchRequestLimit,
+  windowMs: config.matchRequestWindowMs
+});
+
+const registrationRateLimiter = new FixedWindowRateLimiter({
+  limit: config.registrationRequestLimit,
+  windowMs: config.registrationRequestWindowMs
+});
+
 const server = http.createServer(async (request, response) => {
   const requestID = randomUUID().slice(0, 8);
   const startedAt = Date.now();
@@ -71,7 +84,7 @@ const server = http.createServer(async (request, response) => {
         service: "valorant-lock-screen-backend",
         now: new Date(),
         cacheTtlMs: config.cacheTtlMs,
-        usingProtectedRiotKey: Boolean(config.riotApiKey),
+        simulatorEnabled: config.simulatorEnabled,
         hasSimulatedMatch: Boolean(simulatorService.getMatch()),
         apnsConfigured: apnsLiveActivityService.isConfigured(),
         widgetPushConfigured: apnsLiveActivityService.isWidgetConfigured(),
@@ -81,6 +94,10 @@ const server = http.createServer(async (request, response) => {
     }
 
     if (request.method === "GET" && url.pathname === "/simulate") {
+      ensureSimulatorEnabled();
+      if (!ensureSimulatorAuthorized(request, response)) {
+        return;
+      }
       return sendHTML(response, 200, renderSimulatorPage({
         teams: simulatorService.listTeams(),
         simulatedMatch: simulatorService.getMatch(),
@@ -92,13 +109,28 @@ const server = http.createServer(async (request, response) => {
     }
 
     if (request.method === "POST" && url.pathname === "/simulate") {
+      ensureSimulatorEnabled();
+      if (!ensureSimulatorAuthorized(request, response)) {
+        return;
+      }
       const form = await parseForm(request);
       await handleSimulatorAction(form);
       return redirect(response, "/simulate");
     }
 
     if (request.method === "POST" && url.pathname === "/api/v1/live-activities/register") {
+      const rateLimitHeaders = enforceRateLimit({
+        limiter: registrationRateLimiter,
+        request,
+        response,
+        bucket: "live-activity-register"
+      });
+      if (!rateLimitHeaders) {
+        return;
+      }
+
       const body = await parseJSON(request);
+      assertLiveActivityRegistration(body);
       const registration = liveActivityRegistry.register({
         token: body.token,
         activityID: body.activityID,
@@ -115,11 +147,22 @@ const server = http.createServer(async (request, response) => {
       return sendJSON(response, 200, {
         ok: true,
         apnsConfigured: apnsLiveActivityService.isConfigured()
-      });
+      }, rateLimitHeaders);
     }
 
     if (request.method === "POST" && url.pathname === "/api/v1/widget-push/register") {
+      const rateLimitHeaders = enforceRateLimit({
+        limiter: registrationRateLimiter,
+        request,
+        response,
+        bucket: "widget-register"
+      });
+      if (!rateLimitHeaders) {
+        return;
+      }
+
       const body = await parseJSON(request);
+      assertWidgetRegistration(body);
       widgetPushRegistry.register({
         token: body.token,
         widgets: body.widgets ?? []
@@ -128,11 +171,22 @@ const server = http.createServer(async (request, response) => {
       return sendJSON(response, 200, {
         ok: true,
         apnsConfigured: apnsLiveActivityService.isWidgetConfigured()
-      });
+      }, rateLimitHeaders);
     }
 
     if (request.method === "POST" && url.pathname === "/api/v1/live-activities/unregister") {
+      const rateLimitHeaders = enforceRateLimit({
+        limiter: registrationRateLimiter,
+        request,
+        response,
+        bucket: "live-activity-unregister"
+      });
+      if (!rateLimitHeaders) {
+        return;
+      }
+
       const body = await parseJSON(request);
+      assertLiveActivityUnregistration(body);
       liveActivityRegistry.unregister({
         token: body.token ?? null,
         activityID: body.activityID ?? null
@@ -140,10 +194,20 @@ const server = http.createServer(async (request, response) => {
 
       return sendJSON(response, 200, {
         ok: true
-      });
+      }, rateLimitHeaders);
     }
 
     if (request.method === "GET" && url.pathname === "/api/v1/matches") {
+      const rateLimitHeaders = enforceRateLimit({
+        limiter: matchRequestRateLimiter,
+        request,
+        response,
+        bucket: "matches"
+      });
+      if (!rateLimitHeaders) {
+        return;
+      }
+
       const teamIDs = parseTeamIDs(url.searchParams);
       const allowPreviewFallback = parseBoolean(url.searchParams.get("allowPreviewFallback"));
       const { envelope, meta } = await matchFeedService.getFeed({
@@ -179,7 +243,8 @@ const server = http.createServer(async (request, response) => {
         "Cache-Control": "public, max-age=15, stale-while-revalidate=15",
         "X-Valorant-Upstream-Source": meta.upstreamSource,
         "X-Valorant-Cache-Status": meta.cacheStatus,
-        "X-Valorant-Returned-Match-Count": String(meta.returnedMatchCount)
+        "X-Valorant-Returned-Match-Count": String(meta.returnedMatchCount),
+        ...rateLimitHeaders
       });
     }
 
@@ -187,12 +252,15 @@ const server = http.createServer(async (request, response) => {
       error: "Not found"
     });
   } catch (error) {
+    const statusCode = error instanceof HTTPError ? error.statusCode : 502;
+
     logger.error("request_failed", {
       requestID,
       durationMs: Date.now() - startedAt,
-      error: error.message
+      error: error.message,
+      statusCode
     });
-    return sendJSON(response, 502, {
+    return sendJSON(response, statusCode, {
       error: error.message
     });
   }
@@ -204,6 +272,14 @@ server.listen(config.port, config.host, () => {
     port: config.port,
     cacheTtlMs: config.cacheTtlMs,
     upstreamPollIntervalMs: config.upstreamPollIntervalMs,
+    simulatorEnabled: config.simulatorEnabled,
+    simulatorAuthConfigured: isSimulatorAuthConfigured(),
+    maxRequestBodyBytes: config.maxRequestBodyBytes,
+    registrationTtlMs: config.registrationTtlMs,
+    matchRequestLimit: config.matchRequestLimit,
+    matchRequestWindowMs: config.matchRequestWindowMs,
+    registrationRequestLimit: config.registrationRequestLimit,
+    registrationRequestWindowMs: config.registrationRequestWindowMs,
     riotScheduleUrl: config.riotScheduleUrl,
     logLevel: config.logLevel,
     logMatchPayloads: config.logMatchPayloads,
@@ -240,7 +316,7 @@ process.on("SIGTERM", () => {
 const sendJSON = (response, statusCode, payload, extraHeaders = {}) => {
   response.writeHead(statusCode, {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Content-Type": "application/json; charset=utf-8",
     ...extraHeaders
@@ -279,27 +355,42 @@ const parseTeamIDs = (searchParams) => {
 const parseBoolean = (value) => ["1", "true", "yes", "on"].includes((value ?? "").toLowerCase());
 
 const parseJSON = async (request) => {
-  const chunks = [];
+  const body = await readRequestBody(request);
 
-  for await (const chunk of request) {
-    chunks.push(chunk);
+  try {
+    return body ? JSON.parse(body) : {};
+  } catch {
+    throw new HTTPError(400, "Invalid JSON body.");
   }
-
-  const body = Buffer.concat(chunks).toString("utf8");
-  return body ? JSON.parse(body) : {};
 };
 
 const parseForm = async (request) => {
-  const chunks = [];
-
-  for await (const chunk of request) {
-    chunks.push(chunk);
-  }
-
-  const body = Buffer.concat(chunks).toString("utf8");
+  const body = await readRequestBody(request);
   const params = new URLSearchParams(body);
 
   return Object.fromEntries(params.entries());
+};
+
+const readRequestBody = async (request) => {
+  const declaredLength = Number(request.headers["content-length"] ?? 0);
+  if (Number.isFinite(declaredLength) && declaredLength > config.maxRequestBodyBytes) {
+    throw new HTTPError(413, "Request body too large.");
+  }
+
+  const chunks = [];
+  let totalBytes = 0;
+
+  for await (const chunk of request) {
+    totalBytes += chunk.length;
+
+    if (totalBytes > config.maxRequestBodyBytes) {
+      throw new HTTPError(413, "Request body too large.");
+    }
+
+    chunks.push(chunk);
+  }
+
+  return Buffer.concat(chunks).toString("utf8");
 };
 
 const handleSimulatorAction = (form) => {
@@ -369,6 +460,170 @@ const handleSimulatorAction = (form) => {
 
   return Promise.resolve();
 };
+
+const ensureSimulatorEnabled = () => {
+  if (!config.simulatorEnabled) {
+    throw new HTTPError(404, "Not found");
+  }
+};
+
+const ensureSimulatorAuthorized = (request, response) => {
+  if (!isSimulatorAuthConfigured()) {
+    return true;
+  }
+
+  const credentials = parseBasicAuthorization(request.headers.authorization);
+  const isAuthorized =
+    credentials?.username === config.simulatorUsername &&
+    credentials?.password === config.simulatorPassword;
+
+  if (isAuthorized) {
+    return true;
+  }
+
+  response.writeHead(401, {
+    "WWW-Authenticate": 'Basic realm="Valorant Simulator", charset="UTF-8"'
+  });
+  response.end("Authentication required.");
+  return false;
+};
+
+const assertLiveActivityRegistration = (body) => {
+  if (!isHexToken(body?.token)) {
+    throw new HTTPError(400, "Invalid live activity token.");
+  }
+
+  if (!isSafeIdentifier(body?.activityID)) {
+    throw new HTTPError(400, "Invalid activity ID.");
+  }
+
+  if (!isSafeIdentifier(body?.matchID)) {
+    throw new HTTPError(400, "Invalid match ID.");
+  }
+
+  if (!isTeamIDList(body?.trackedTeamIDs)) {
+    throw new HTTPError(400, "Invalid tracked team IDs.");
+  }
+};
+
+const assertWidgetRegistration = (body) => {
+  if (!isHexToken(body?.token)) {
+    throw new HTTPError(400, "Invalid widget push token.");
+  }
+
+  if (!Array.isArray(body?.widgets) || body.widgets.length > 8) {
+    throw new HTTPError(400, "Invalid widget registration payload.");
+  }
+
+  for (const widget of body.widgets) {
+    if (!isShortText(widget?.kind) || !isShortText(widget?.family)) {
+      throw new HTTPError(400, "Invalid widget registration payload.");
+    }
+  }
+};
+
+const assertLiveActivityUnregistration = (body) => {
+  const hasToken = body?.token != null;
+  const hasActivityID = body?.activityID != null;
+
+  if (!hasToken && !hasActivityID) {
+    throw new HTTPError(400, "A token or activity ID is required.");
+  }
+
+  if (hasToken && !isHexToken(body.token)) {
+    throw new HTTPError(400, "Invalid live activity token.");
+  }
+
+  if (hasActivityID && !isSafeIdentifier(body.activityID)) {
+    throw new HTTPError(400, "Invalid activity ID.");
+  }
+};
+
+const isHexToken = (value) =>
+  typeof value === "string" && /^[a-f0-9]{32,512}$/iu.test(value.trim());
+
+const isSafeIdentifier = (value) =>
+  typeof value === "string" && value.length > 0 && value.length <= 160;
+
+const isShortText = (value) =>
+  typeof value === "string" && value.trim().length > 0 && value.trim().length <= 80;
+
+const isTeamIDList = (value) =>
+  Array.isArray(value) &&
+  value.length <= 20 &&
+  value.every((teamID) => typeof teamID === "string" && /^[a-z0-9-]{1,64}$/iu.test(teamID));
+
+const enforceRateLimit = ({ limiter, request, response, bucket }) => {
+  const result = limiter.consume(`${bucket}:${clientAddress(request)}`);
+  const headers = {
+    "X-RateLimit-Limit": String(result.limit),
+    "X-RateLimit-Remaining": String(result.remaining),
+    "X-RateLimit-Reset": String(Math.floor(result.resetAtMs / 1_000))
+  };
+
+  if (result.allowed) {
+    return headers;
+  }
+
+  sendJSON(response, 429, {
+    error: "Rate limit exceeded."
+  }, {
+    ...headers,
+    "Retry-After": String(result.retryAfterSeconds)
+  });
+  return null;
+};
+
+const clientAddress = (request) => {
+  const forwardedFor = request.headers["x-forwarded-for"];
+  if (typeof forwardedFor === "string" && forwardedFor.trim() !== "") {
+    return forwardedFor.split(",")[0].trim();
+  }
+
+  const cfConnectingIP = request.headers["cf-connecting-ip"];
+  if (typeof cfConnectingIP === "string" && cfConnectingIP.trim() !== "") {
+    return cfConnectingIP.trim();
+  }
+
+  return request.socket.remoteAddress ?? "unknown";
+};
+
+const isSimulatorAuthConfigured = () =>
+  Boolean(config.simulatorUsername && config.simulatorPassword);
+
+const parseBasicAuthorization = (authorizationHeader) => {
+  if (typeof authorizationHeader !== "string") {
+    return null;
+  }
+
+  const match = /^Basic\s+(.+)$/iu.exec(authorizationHeader);
+  if (!match) {
+    return null;
+  }
+
+  try {
+    const decoded = Buffer.from(match[1], "base64").toString("utf8");
+    const separatorIndex = decoded.indexOf(":");
+
+    if (separatorIndex === -1) {
+      return null;
+    }
+
+    return {
+      username: decoded.slice(0, separatorIndex),
+      password: decoded.slice(separatorIndex + 1)
+    };
+  } catch {
+    return null;
+  }
+};
+
+class HTTPError extends Error {
+  constructor(statusCode, message) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
 
 const renderSimulatorPage = ({
   teams,

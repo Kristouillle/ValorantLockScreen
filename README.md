@@ -77,11 +77,12 @@ If you want to keep raw source files outside Xcode first, store them in a folder
 
 - `website/` contains the static marketing site and legal pages.
 - You can preview it locally by opening `website/index.html` directly in a browser.
-- `website/privacy.html` and `website/terms.html` are still placeholders and should be replaced before public launch.
+- Review `website/privacy.html` and `website/terms.html` before public launch to make sure the copy matches your final data flows and support policy.
 
 ## Production notes
 
 - For real distribution, host the backend on HTTPS and point the app at that deployed backend instead of a LAN IP.
+- If you keep the production simulator enabled for manual validation, protect `/simulate` with server-side credentials rather than leaving it public.
 - The website, privacy policy, and terms pages are part of the eventual Riot production-key and App Store submission path.
 
 ## Project layout
