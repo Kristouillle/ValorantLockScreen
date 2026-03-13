@@ -603,6 +603,10 @@ body::before {
   background: rgba(232, 245, 238, 0.98);
 }
 
+.pipeline__node--accent span {
+  color: var(--accent);
+}
+
 .pipeline__kicker {
   color: var(--muted);
   font-size: 0.72rem;
