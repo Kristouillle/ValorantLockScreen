@@ -1,0 +1,700 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 71;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* ValorantLockScreenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000001 /* ValorantLockScreenApp.swift */; };
+		A10000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* ContentView.swift */; };
+		A10000000000000000000003 /* TeamSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000003 /* TeamSelectionView.swift */; };
+		A10000000000000000000004 /* MatchPollingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000004 /* MatchPollingViewModel.swift */; };
+		A10000000000000000000005 /* LiveActivityCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000005 /* LiveActivityCoordinator.swift */; };
+		A10000000000000000000007 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* Team.swift */; };
+		A10000000000000000000008 /* ScoreLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000002 /* ScoreLine.swift */; };
+		A10000000000000000000009 /* MatchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000003 /* MatchState.swift */; };
+		A1000000000000000000000A /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000004 /* Match.swift */; };
+		A1000000000000000000000B /* TrackedSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000005 /* TrackedSelection.swift */; };
+		A1000000000000000000000C /* MatchEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000006 /* MatchEnvelope.swift */; };
+		A1000000000000000000000D /* ScoreActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000007 /* ScoreActivityAttributes.swift */; };
+		A1000000000000000000000E /* MatchRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000001 /* MatchRepository.swift */; };
+		A1000000000000000000000F /* PreviewMatchRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000002 /* PreviewMatchRepository.swift */; };
+		A10000000000000000000010 /* RiotMatchRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000003 /* RiotMatchRepository.swift */; };
+		A10000000000000000000011 /* CompositeMatchRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000004 /* CompositeMatchRepository.swift */; };
+		A10000000000000000000012 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40000000000000000000001 /* AppGroup.swift */; };
+		A10000000000000000000013 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40000000000000000000002 /* SettingsStore.swift */; };
+		A10000000000000000000014 /* MatchCacheStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40000000000000000000003 /* MatchCacheStore.swift */; };
+		A10000000000000000000015 /* LiveMatchResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50000000000000000000001 /* LiveMatchResolver.swift */; };
+		A10000000000000000000016 /* ValorantLockScreenWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B80000000000000000000002 /* ValorantLockScreenWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A10000000000000000000017 /* TeamLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50000000000000000000002 /* TeamLogoView.swift */; };
+		A10000000000000000000018 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000006 /* Assets.xcassets */; };
+		A10000000000000000000019 /* AppSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40000000000000000000004 /* AppSecrets.swift */; };
+		A20000000000000000000001 /* ValorantLockScreenWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000001 /* ValorantLockScreenWidget.swift */; };
+		A20000000000000000000002 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* Team.swift */; };
+		A20000000000000000000003 /* ScoreLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000002 /* ScoreLine.swift */; };
+		A20000000000000000000004 /* MatchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000003 /* MatchState.swift */; };
+		A20000000000000000000005 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000004 /* Match.swift */; };
+		A20000000000000000000006 /* MatchEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000006 /* MatchEnvelope.swift */; };
+		A20000000000000000000007 /* ScoreActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000007 /* ScoreActivityAttributes.swift */; };
+		A20000000000000000000008 /* PreviewMatchRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000002 /* PreviewMatchRepository.swift */; };
+		A20000000000000000000009 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40000000000000000000001 /* AppGroup.swift */; };
+		A2000000000000000000000A /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40000000000000000000002 /* SettingsStore.swift */; };
+		A2000000000000000000000B /* LiveMatchResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50000000000000000000001 /* LiveMatchResolver.swift */; };
+		A2000000000000000000000C /* MatchRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000001 /* MatchRepository.swift */; };
+		A2000000000000000000000D /* TeamLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50000000000000000000002 /* TeamLogoView.swift */; };
+		A2000000000000000000000E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000006 /* Assets.xcassets */; };
+		A2000000000000000000000F /* AppSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40000000000000000000004 /* AppSecrets.swift */; };
+		A30000000000000000000001 /* LiveMatchResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70000000000000000000001 /* LiveMatchResolverTests.swift */; };
+		A30000000000000000000002 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* Team.swift */; };
+		A30000000000000000000003 /* ScoreLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000002 /* ScoreLine.swift */; };
+		A30000000000000000000004 /* MatchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000003 /* MatchState.swift */; };
+		A30000000000000000000005 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000004 /* Match.swift */; };
+		A30000000000000000000006 /* LiveMatchResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50000000000000000000001 /* LiveMatchResolver.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C10000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E10000000000000000000002;
+			remoteInfo = ValorantLockScreenWidget;
+		};
+		C10000000000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E10000000000000000000001;
+			remoteInfo = ValorantLockScreenApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D10000000000000000000001 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A10000000000000000000016 /* ValorantLockScreenWidget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		B10000000000000000000001 /* ValorantLockScreenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValorantLockScreenApp.swift; sourceTree = "<group>"; };
+		B10000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B10000000000000000000003 /* TeamSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamSelectionView.swift; sourceTree = "<group>"; };
+		B10000000000000000000004 /* MatchPollingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchPollingViewModel.swift; sourceTree = "<group>"; };
+		B10000000000000000000005 /* LiveActivityCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityCoordinator.swift; sourceTree = "<group>"; };
+		B10000000000000000000006 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B10000000000000000000007 /* ValorantLockScreen.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ValorantLockScreen.entitlements; sourceTree = "<group>"; };
+		B20000000000000000000001 /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
+		B20000000000000000000002 /* ScoreLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreLine.swift; sourceTree = "<group>"; };
+		B20000000000000000000003 /* MatchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchState.swift; sourceTree = "<group>"; };
+		B20000000000000000000004 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		B20000000000000000000005 /* TrackedSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedSelection.swift; sourceTree = "<group>"; };
+		B20000000000000000000006 /* MatchEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchEnvelope.swift; sourceTree = "<group>"; };
+		B20000000000000000000007 /* ScoreActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreActivityAttributes.swift; sourceTree = "<group>"; };
+		B30000000000000000000001 /* MatchRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchRepository.swift; sourceTree = "<group>"; };
+		B30000000000000000000002 /* PreviewMatchRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewMatchRepository.swift; sourceTree = "<group>"; };
+		B30000000000000000000003 /* RiotMatchRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiotMatchRepository.swift; sourceTree = "<group>"; };
+		B30000000000000000000004 /* CompositeMatchRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeMatchRepository.swift; sourceTree = "<group>"; };
+		B40000000000000000000001 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
+		B40000000000000000000002 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		B40000000000000000000003 /* MatchCacheStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCacheStore.swift; sourceTree = "<group>"; };
+		B40000000000000000000004 /* AppSecrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSecrets.swift; sourceTree = "<group>"; };
+		B50000000000000000000001 /* LiveMatchResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMatchResolver.swift; sourceTree = "<group>"; };
+		B50000000000000000000002 /* TeamLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamLogoView.swift; sourceTree = "<group>"; };
+		B60000000000000000000001 /* ValorantLockScreenWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValorantLockScreenWidget.swift; sourceTree = "<group>"; };
+		B60000000000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B60000000000000000000003 /* ValorantLockScreenWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ValorantLockScreenWidget.entitlements; sourceTree = "<group>"; };
+		B70000000000000000000001 /* LiveMatchResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMatchResolverTests.swift; sourceTree = "<group>"; };
+		B80000000000000000000001 /* ValorantLockScreenApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = ValorantLockScreenApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B80000000000000000000002 /* ValorantLockScreenWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; path = ValorantLockScreenWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B80000000000000000000003 /* ValorantLockScreenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = ValorantLockScreenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D20000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D20000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D20000000000000000000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D30000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				D30000000000000000000002 /* ValorantLockScreenApp */,
+				D30000000000000000000003 /* Shared */,
+				D30000000000000000000004 /* ValorantLockScreenWidget */,
+				D30000000000000000000005 /* ValorantLockScreenTests */,
+				D30000000000000000000006 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D30000000000000000000002 /* ValorantLockScreenApp */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000000001 /* ValorantLockScreenApp.swift */,
+				B10000000000000000000002 /* ContentView.swift */,
+				B10000000000000000000003 /* TeamSelectionView.swift */,
+				B10000000000000000000004 /* MatchPollingViewModel.swift */,
+				B10000000000000000000005 /* LiveActivityCoordinator.swift */,
+				B10000000000000000000006 /* Assets.xcassets */,
+				B10000000000000000000007 /* ValorantLockScreen.entitlements */,
+			);
+			path = ValorantLockScreenApp;
+			sourceTree = "<group>";
+		};
+		D30000000000000000000003 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				D30000000000000000000007 /* Models */,
+				D30000000000000000000008 /* Services */,
+				D30000000000000000000009 /* Storage */,
+				D3000000000000000000000A /* Logic */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		D30000000000000000000004 /* ValorantLockScreenWidget */ = {
+			isa = PBXGroup;
+			children = (
+				B60000000000000000000001 /* ValorantLockScreenWidget.swift */,
+				B60000000000000000000002 /* Info.plist */,
+				B60000000000000000000003 /* ValorantLockScreenWidget.entitlements */,
+			);
+			path = ValorantLockScreenWidget;
+			sourceTree = "<group>";
+		};
+		D30000000000000000000005 /* ValorantLockScreenTests */ = {
+			isa = PBXGroup;
+			children = (
+				B70000000000000000000001 /* LiveMatchResolverTests.swift */,
+			);
+			path = ValorantLockScreenTests;
+			sourceTree = "<group>";
+		};
+		D30000000000000000000006 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B80000000000000000000001 /* ValorantLockScreenApp.app */,
+				B80000000000000000000002 /* ValorantLockScreenWidget.appex */,
+				B80000000000000000000003 /* ValorantLockScreenTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D30000000000000000000007 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B20000000000000000000001 /* Team.swift */,
+				B20000000000000000000002 /* ScoreLine.swift */,
+				B20000000000000000000003 /* MatchState.swift */,
+				B20000000000000000000004 /* Match.swift */,
+				B20000000000000000000005 /* TrackedSelection.swift */,
+				B20000000000000000000006 /* MatchEnvelope.swift */,
+				B20000000000000000000007 /* ScoreActivityAttributes.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D30000000000000000000008 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B30000000000000000000001 /* MatchRepository.swift */,
+				B30000000000000000000002 /* PreviewMatchRepository.swift */,
+				B30000000000000000000003 /* RiotMatchRepository.swift */,
+				B30000000000000000000004 /* CompositeMatchRepository.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		D30000000000000000000009 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				B40000000000000000000001 /* AppGroup.swift */,
+				B40000000000000000000002 /* SettingsStore.swift */,
+				B40000000000000000000003 /* MatchCacheStore.swift */,
+				B40000000000000000000004 /* AppSecrets.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		D3000000000000000000000A /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				B50000000000000000000001 /* LiveMatchResolver.swift */,
+				B50000000000000000000002 /* TeamLogoView.swift */,
+			);
+			path = Logic;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E10000000000000000000001 /* ValorantLockScreenApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F10000000000000000000001 /* Build configuration list for PBXNativeTarget "ValorantLockScreenApp" */;
+			buildPhases = (
+				D40000000000000000000001 /* Sources */,
+				D20000000000000000000001 /* Frameworks */,
+				D40000000000000000000002 /* Resources */,
+				D10000000000000000000001 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E20000000000000000000001 /* PBXTargetDependency */,
+			);
+			name = ValorantLockScreenApp;
+			productName = ValorantLockScreenApp;
+			productReference = B80000000000000000000001 /* ValorantLockScreenApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E10000000000000000000002 /* ValorantLockScreenWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F10000000000000000000002 /* Build configuration list for PBXNativeTarget "ValorantLockScreenWidget" */;
+			buildPhases = (
+				D40000000000000000000003 /* Sources */,
+				D20000000000000000000002 /* Frameworks */,
+				D40000000000000000000004 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ValorantLockScreenWidget;
+			productName = ValorantLockScreenWidget;
+			productReference = B80000000000000000000002 /* ValorantLockScreenWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		E10000000000000000000003 /* ValorantLockScreenTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F10000000000000000000003 /* Build configuration list for PBXNativeTarget "ValorantLockScreenTests" */;
+			buildPhases = (
+				D40000000000000000000005 /* Sources */,
+				D20000000000000000000003 /* Frameworks */,
+				D40000000000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E20000000000000000000002 /* PBXTargetDependency */,
+			);
+			name = ValorantLockScreenTests;
+			productName = ValorantLockScreenTests;
+			productReference = B80000000000000000000003 /* ValorantLockScreenTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E00000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					E10000000000000000000001 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					E10000000000000000000002 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					E10000000000000000000003 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = E10000000000000000000001;
+					};
+				};
+			};
+			buildConfigurationList = F10000000000000000000004 /* Build configuration list for PBXProject "ValorantLockScreen" */;
+			compatibilityVersion = "Xcode 16.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D30000000000000000000001;
+			minimizedProjectReferenceProxies = 1;
+			productRefGroup = D30000000000000000000006 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E10000000000000000000001 /* ValorantLockScreenApp */,
+				E10000000000000000000002 /* ValorantLockScreenWidget */,
+				E10000000000000000000003 /* ValorantLockScreenTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D40000000000000000000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000018 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D40000000000000000000004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2000000000000000000000E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D40000000000000000000006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D40000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000001 /* ValorantLockScreenApp.swift in Sources */,
+				A10000000000000000000002 /* ContentView.swift in Sources */,
+				A10000000000000000000003 /* TeamSelectionView.swift in Sources */,
+				A10000000000000000000004 /* MatchPollingViewModel.swift in Sources */,
+				A10000000000000000000005 /* LiveActivityCoordinator.swift in Sources */,
+				A10000000000000000000007 /* Team.swift in Sources */,
+				A10000000000000000000008 /* ScoreLine.swift in Sources */,
+				A10000000000000000000009 /* MatchState.swift in Sources */,
+				A1000000000000000000000A /* Match.swift in Sources */,
+				A1000000000000000000000B /* TrackedSelection.swift in Sources */,
+				A1000000000000000000000C /* MatchEnvelope.swift in Sources */,
+				A1000000000000000000000D /* ScoreActivityAttributes.swift in Sources */,
+				A1000000000000000000000E /* MatchRepository.swift in Sources */,
+				A1000000000000000000000F /* PreviewMatchRepository.swift in Sources */,
+				A10000000000000000000010 /* RiotMatchRepository.swift in Sources */,
+				A10000000000000000000011 /* CompositeMatchRepository.swift in Sources */,
+				A10000000000000000000012 /* AppGroup.swift in Sources */,
+				A10000000000000000000013 /* SettingsStore.swift in Sources */,
+				A10000000000000000000014 /* MatchCacheStore.swift in Sources */,
+				A10000000000000000000019 /* AppSecrets.swift in Sources */,
+				A10000000000000000000015 /* LiveMatchResolver.swift in Sources */,
+				A10000000000000000000017 /* TeamLogoView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D40000000000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A20000000000000000000001 /* ValorantLockScreenWidget.swift in Sources */,
+				A20000000000000000000002 /* Team.swift in Sources */,
+				A20000000000000000000003 /* ScoreLine.swift in Sources */,
+				A20000000000000000000004 /* MatchState.swift in Sources */,
+				A20000000000000000000005 /* Match.swift in Sources */,
+				A20000000000000000000006 /* MatchEnvelope.swift in Sources */,
+				A20000000000000000000007 /* ScoreActivityAttributes.swift in Sources */,
+				A20000000000000000000008 /* PreviewMatchRepository.swift in Sources */,
+				A2000000000000000000000C /* MatchRepository.swift in Sources */,
+				A20000000000000000000009 /* AppGroup.swift in Sources */,
+				A2000000000000000000000A /* SettingsStore.swift in Sources */,
+				A2000000000000000000000F /* AppSecrets.swift in Sources */,
+				A2000000000000000000000B /* LiveMatchResolver.swift in Sources */,
+				A2000000000000000000000D /* TeamLogoView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D40000000000000000000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A30000000000000000000001 /* LiveMatchResolverTests.swift in Sources */,
+				A30000000000000000000002 /* Team.swift in Sources */,
+				A30000000000000000000003 /* ScoreLine.swift in Sources */,
+				A30000000000000000000004 /* MatchState.swift in Sources */,
+				A30000000000000000000005 /* Match.swift in Sources */,
+				A30000000000000000000006 /* LiveMatchResolver.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E20000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E10000000000000000000002 /* ValorantLockScreenWidget */;
+			targetProxy = C10000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		E20000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E10000000000000000000001 /* ValorantLockScreenApp */;
+			targetProxy = C10000000000000000000002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		F20000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APS_ENVIRONMENT = development;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ValorantLockScreenApp/ValorantLockScreen.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 895DS82P3G;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Valorant Lock Screen";
+				INFOPLIST_KEY_CFBundleVersion = 1;
+				INFOPLIST_KEY_LSRequiresIPhoneOS = YES;
+				INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsLocalNetworking = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.valorantlockscreen;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		F20000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APS_ENVIRONMENT = production;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ValorantLockScreenApp/ValorantLockScreen.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 895DS82P3G;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Valorant Lock Screen";
+				INFOPLIST_KEY_CFBundleVersion = 1;
+				INFOPLIST_KEY_LSRequiresIPhoneOS = YES;
+				INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsLocalNetworking = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivitiesFrequentUpdates = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.valorantlockscreen;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		F20000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APS_ENVIRONMENT = development;
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = ValorantLockScreenWidget/ValorantLockScreenWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 895DS82P3G;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ValorantLockScreenWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.valorantlockscreen.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		F20000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APS_ENVIRONMENT = production;
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = ValorantLockScreenWidget/ValorantLockScreenWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 895DS82P3G;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ValorantLockScreenWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.valorantlockscreen.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		F20000000000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.valorantlockscreen;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ValorantLockScreenApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ValorantLockScreenApp";
+			};
+			name = Debug;
+		};
+		F20000000000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.valorantlockscreen;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ValorantLockScreenApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ValorantLockScreenApp";
+			};
+			name = Release;
+		};
+		F20000000000000000000007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = "";
+			};
+			name = Debug;
+		};
+		F20000000000000000000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F10000000000000000000001 /* Build configuration list for PBXNativeTarget "ValorantLockScreenApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F20000000000000000000001 /* Debug */,
+				F20000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F10000000000000000000002 /* Build configuration list for PBXNativeTarget "ValorantLockScreenWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F20000000000000000000003 /* Debug */,
+				F20000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F10000000000000000000003 /* Build configuration list for PBXNativeTarget "ValorantLockScreenTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F20000000000000000000005 /* Debug */,
+				F20000000000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F10000000000000000000004 /* Build configuration list for PBXProject "ValorantLockScreen" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F20000000000000000000007 /* Debug */,
+				F20000000000000000000008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E00000000000000000000001 /* Project object */;
+}

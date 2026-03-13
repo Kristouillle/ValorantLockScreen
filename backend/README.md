@@ -1,0 +1,97 @@
+# Backend
+
+Minimal Node backend for the Valorant lock screen app.
+
+The backend reads environment variables from `backend/.env` automatically. A starter template lives at [backend/.env.example](/Users/cviens/Documents/Programmation/Personnal/valorant/backend/.env.example).
+
+## What it does
+
+- polls Riot's official VALORANT Esports schedule page
+- normalizes matches into the app's JSON shape
+- caches the feed in memory to reduce upstream traffic
+- optionally falls back to preview fixtures when the Riot fetch fails
+
+## Run locally
+
+```bash
+cd backend
+npm start
+```
+
+Environment variables:
+
+- `HOST`
+- `PORT`
+- `MATCH_CACHE_TTL_MS`
+- `UPSTREAM_POLL_INTERVAL_MS`
+- `RIOT_SCHEDULE_URL`
+- `RIOT_API_KEY`
+- `LOG_LEVEL`
+- `LOG_MATCH_PAYLOADS`
+- `APNS_ENVIRONMENT`
+- `APNS_TEAM_ID`
+- `APNS_KEY_ID`
+- `APNS_BUNDLE_ID`
+- `APNS_PRIVATE_KEY`
+- `APNS_TOPIC`
+
+`RIOT_API_KEY` is reserved for future protected Riot endpoints. The current schedule scraper does not require it.
+
+For simulator-only local development, the default `HOST=127.0.0.1` is fine. For testing from a physical iPhone on your LAN, run the backend with `HOST=0.0.0.0` and point the app at your Mac's LAN IP.
+
+## Logging
+
+The backend now logs:
+
+- each incoming request
+- cache hit vs cache refresh vs preview fallback
+- Riot schedule fetch start/success
+- a summary of the matches returned to the app
+
+Set `LOG_MATCH_PAYLOADS=true` if you also want the full JSON envelope printed to stdout.
+
+## Live Activity Pushes
+
+The backend can register Live Activity push tokens and send ActivityKit updates through APNs.
+
+Required APNs env:
+
+- `APNS_ENVIRONMENT=sandbox` for debug/dev signed builds
+- `APNS_TEAM_ID`
+- `APNS_KEY_ID`
+- `APNS_BUNDLE_ID`
+- `APNS_PRIVATE_KEY`
+
+`APNS_TOPIC` defaults to `${APNS_BUNDLE_ID}.push-type.liveactivity`.
+
+You can put all of these directly in [backend/.env](/Users/cviens/Documents/Programmation/Personnal/valorant/backend/.env).
+
+The iOS app must also be signed with Push Notifications enabled. The current code uploads the per-activity push token to:
+
+- `POST /api/v1/live-activities/register`
+- `POST /api/v1/live-activities/unregister`
+
+## API
+
+`GET /health`
+
+`GET /api/v1/matches?teamIds=sentinels,paper-rex&allowPreviewFallback=true`
+
+`GET /simulate`
+
+`POST /api/v1/live-activities/register`
+
+`POST /api/v1/live-activities/unregister`
+
+Use `/simulate` in a browser to create an in-memory fake live match, increment round scores, increment map wins, rename the current map, or clear the simulation. The simulated match is merged into `/api/v1/matches`, so the iOS app will see it as if it were part of the live feed.
+
+The response is a `MatchEnvelope` JSON payload with ISO-8601 timestamps so the iOS app can decode it directly.
+
+## Suggested Test Flow
+
+1. Start the backend with APNs env vars configured.
+2. Open the app on a physical iPhone and select a team that will match your simulated series.
+3. Create a simulated live match at `/simulate`.
+4. Refresh the app once so it starts the Live Activity and uploads the push token.
+5. Lock the phone.
+6. Use the `/simulate` buttons to increment rounds/maps and watch the Live Activity update via APNs.

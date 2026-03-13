@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valorant Lock Screen</title>
+  <meta
+    name="description"
+    content="Track live Valorant matches on your iPhone lock screen with a focused companion app, Live Activities, and widgets."
+  >
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-scene="live">
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="./index.html">
+        <img src="assets/logo.png" alt="Valorant Logo" id="logo">
+        <span class="brand-copy">
+          <strong>Valorant Lock Screen</strong>
+          <span>Live match tracking for iPhone</span>
+        </span>
+      </a>
+
+      <nav class="site-nav" aria-label="Primary">
+        <a href="#product">Product</a>
+        <a href="#story">Why I made it</a>
+        <a href="#privacy">Privacy</a>
+        <a href="./privacy.html">Privacy Policy</a>
+        <a href="./terms.html">Terms</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Just give me the damn score!</p>
+          <h1>Follow Valorant matches without living in browser tabs.</h1>
+          <p class="lede">
+            Valorant Lock Screen is a focused iPhone companion that puts one tracked live
+            match on the lock screen, keeps a widget ready on the home screen, and updates every round.  Shoutout iOS 26!
+          </p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#product">See how it works</a>
+            <a class="button button-secondary" href="./privacy.html">Read the privacy policy</a>
+          </div>
+
+          <ul class="signal-list" aria-label="Highlights">
+            <li>Live Activity updates for active matches</li>
+            <li>Widget support for quick schedule and score snapshots</li>
+            <li>Backend-owned match normalization and push delivery</li>
+          </ul>
+        </div>
+
+        <div class="hero-panel">
+          <div class="phone-chrome">
+            <div class="notch"></div>
+            <div class="app-preview" aria-hidden="true">
+              <div class="app-preview__hero">
+                <span class="app-preview__eyebrow">Privacy posture</span>
+                <h3>Clean setup. No account wall.</h3>
+                <p>
+                  The app is meant to be useful immediately, not another service asking for more
+                  personal context than a score tracker needs.
+                </p>
+              </div>
+
+              <div class="app-preview__fact">
+                <strong>Follow the teams you like</strong>
+                <p>Pick who you care about and let the app focus the lock screen around that.</p>
+              </div>
+
+              <div class="app-preview__fact">
+                <strong>No account needed</strong>
+                <p>No signup, no profile-building, and no social graph required to use it.</p>
+              </div>
+
+              <div class="app-preview__fact">
+                <strong>No extra user or Riot data stored</strong>
+                <p>Only the minimal preferences and delivery tokens needed to run widgets and Live Activities.</p>
+              </div>
+            </div>
+            <div class="lock-scene">
+              <p class="lock-time">09:07</p>
+              <div class="lock-widget" aria-hidden="true">
+                <div class="lock-widget__row">
+                  <span class="lock-widget__logo">NRG</span>
+                  <strong>4-1</strong>
+                  <span class="lock-widget__logo">Nongshim</span>
+                </div>
+                <div class="lock-widget__row lock-widget__row--meta">
+                  <span>◇ ◇</span>
+                  <span>Abyss</span>
+                  <span>◇ ◇</span>
+                </div>
+              </div>
+              <div class="mini-scoreboard" aria-live="polite">
+                <div class="mini-scoreboard__top">
+                  <span class="mini-event">Masters Santiago</span>
+                  <span class="mini-state" id="scene-state">Live</span>
+                </div>
+                <div class="mini-scoreboard__teams">
+                  <span>NRG</span>
+                  <strong id="scene-score">4 - 1</strong>
+                  <span>Nongshim</span>
+                </div>
+                <div class="mini-scoreboard__meta" id="scene-meta">Abyss • Maps 0-0 • BO3</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="scene-switcher" aria-label="Demo states">
+            <button class="scene-pill is-active" type="button" data-scene-target="live">Live Activity</button>
+            <button class="scene-pill" type="button" data-scene-target="widget">Widget</button>
+            <button class="scene-pill" type="button" data-scene-target="privacy">Simple app</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="feature-strip" id="product">
+        <article class="feature-card">
+          <span class="feature-index">01</span>
+          <h2>Track only the teams you care about</h2>
+          <p>
+            Pick the teams you follow, and the app resolves the highest-priority live match to
+            show on the lock screen.
+          </p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-index">02</span>
+          <h2>Use Live Activity, widget, or both</h2>
+          <p>
+            The app now supports a user toggle for Live Activities, so people can keep a cleaner
+            widget-only setup if they want.
+          </p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-index">03</span>
+          <h2>Own the backend, not the chaos</h2>
+          <p>
+            Match data is normalized server-side before it reaches the phone, which keeps update
+            logic, caching, and push delivery under control.
+          </p>
+        </article>
+      </section>
+
+      <section class="story-grid" id="story">
+        <div class="story-copy">
+          <p class="eyebrow">I built this</p>
+          <h2>because I didn't want to be the asshole on his phone all the time.</h2>
+        </div>
+
+        <div class="story-summary">
+          <p>
+            Last October, I'm with my grandmother. I have no way of explaining to her that NRG is on
+            the run of their life. Ethan is about to get his 2nd Champ for god's sake. I keep
+            looking at my phone. I keep refreshing Vlr. I know I should focus on her, but I don't.
+          </p>
+          <p>
+            I built this so that when a match is live, I can see it on my lock screen without
+            having to open up the browser and refresh. It's a small inconvenience, but it allows me
+            to follow the game with a much quicker glance.
+          </p>
+        </div>
+
+        <div class="process-card process-card--flow">
+          <div class="pipeline" aria-label="Riot data flows to the backend, then Apple push services, then the phone">
+            <div class="pipeline__rail" aria-hidden="true">
+              <span class="pipeline__pulse pipeline__pulse--a"></span>
+              <span class="pipeline__pulse pipeline__pulse--b"></span>
+              <span class="pipeline__pulse pipeline__pulse--c"></span>
+            </div>
+            <div class="pipeline__node">
+              <span class="pipeline__kicker">Upstream</span>
+              <strong>Riot</strong>
+              <small>Match data source</small>
+            </div>
+
+            <div class="pipeline__line" aria-hidden="true">
+              <span class="pipeline__pulse pipeline__pulse--a"></span>
+              <span class="pipeline__pulse pipeline__pulse--b"></span>
+              <span class="pipeline__pulse pipeline__pulse--c"></span>
+            </div>
+
+            <div class="pipeline__node pipeline__node--accent">
+              <span class="pipeline__kicker">Where we are</span>
+              <strong>Backend API</strong>
+              <small>Normalize, cache, decide, push</small>
+            </div>
+
+            <div class="pipeline__line" aria-hidden="true">
+              <span class="pipeline__pulse pipeline__pulse--a"></span>
+              <span class="pipeline__pulse pipeline__pulse--b"></span>
+              <span class="pipeline__pulse pipeline__pulse--c"></span>
+            </div>
+
+            <div class="pipeline__node">
+              <span class="pipeline__kicker">Delivery</span>
+              <strong>Apple</strong>
+              <small>Live Activity + widget pushes</small>
+            </div>
+
+            <div class="pipeline__line" aria-hidden="true">
+              <span class="pipeline__pulse pipeline__pulse--a"></span>
+              <span class="pipeline__pulse pipeline__pulse--b"></span>
+              <span class="pipeline__pulse pipeline__pulse--c"></span>
+            </div>
+
+            <div class="pipeline__node">
+              <span class="pipeline__kicker">Client</span>
+              <strong>iPhone</strong>
+              <small>Lock screen and home screen surfaces</small>
+            </div>
+          </div>
+
+          <div class="process-copy">
+            <p class="eyebrow">How it works</p>
+            <p>
+              Riot does not talk straight to every device. The backend owns the match state,
+              decides what matters, then sends the right update to Apple so the phone can refresh
+              the Live Activity or widget cleanly.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="privacy-callout" id="privacy">
+        <div>
+          <p class="eyebrow">Privacy by design</p>
+          <h2>The app does not need a social graph, contact list, or account profile to show a score.</h2>
+        </div>
+        <div class="privacy-points">
+          <p>Tracked teams are stored for product behavior, not advertising.</p>
+          <p>Match updates are fetched and normalized on a purpose-built backend.</p>
+          <p>Policy pages stay intentionally short and readable.</p>
+        </div>
+      </section>
+
+      <section class="site-footer-card">
+        <div>
+          <p class="eyebrow">Launch prep</p>
+          <h2>This site will also serve as the public home for the product, backend, and legal docs.</h2>
+        </div>
+        <div class="footer-actions">
+          <a class="button button-primary" href="./privacy.html">Privacy Policy</a>
+          <a class="button button-secondary" href="./terms.html">Terms of Service</a>
+        </div>
+      </section>
+
+      <section class="founder-card" id="founder">
+        <div class="founder-portrait">
+          <img src="./assets/chris.jpeg" alt="Portrait of Chris Vns">
+        </div>
+
+        <div class="founder-copy">
+          <p class="eyebrow">Built by one guy</p>
+          <h2>Chris Vns</h2>
+          <p>
+            I'm a software engineer based in Montréal who loves anything open source and privacy focused.  
+            And like they say, be the change you wanna see in the world.  Be good to each other.
+          </p>
+          <p>
+            I made this because I wanted to learn iOS development and build something useful for the Valorant community.  It's like two birds with one OP collat.
+          </p>
+
+          <div class="founder-notes" aria-label="Suggested profile points">
+            <p>Not looking for funding, I'm happy to front the costs.</p>
+            <p>Not looking for work, I'm happy with my current job.</p>
+            <p>Riot Gunbuddy perhaps?</p>
+            <p><a href="https://chris.kshtech.ca" target="_blank" rel="noopener">Portfolio</a> (lowkey outdated)</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
