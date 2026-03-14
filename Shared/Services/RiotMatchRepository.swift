@@ -3,15 +3,12 @@ import Foundation
 struct RiotMatchRepository: MatchRepository {
     private let baseURL: URL
     private let session: URLSession
-    private let allowPreviewFallback: Bool
 
     init(
         baseURL: URL = AppSecrets.backendBaseURL,
-        allowPreviewFallback: Bool,
         session: URLSession = .shared
     ) {
         self.baseURL = baseURL
-        self.allowPreviewFallback = allowPreviewFallback
         self.session = session
     }
 
@@ -28,8 +25,7 @@ struct RiotMatchRepository: MatchRepository {
         }
 
         components.queryItems = [
-            URLQueryItem(name: "teamIds", value: trackedTeams.map(\.id).joined(separator: ",")),
-            URLQueryItem(name: "allowPreviewFallback", value: allowPreviewFallback ? "true" : "false")
+            URLQueryItem(name: "teamIds", value: trackedTeams.map(\.id).joined(separator: ","))
         ]
 
         guard let url = components.url else {

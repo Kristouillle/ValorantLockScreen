@@ -20,6 +20,36 @@ const sceneButtons = document.querySelectorAll("[data-scene-target]");
 const sceneState = document.getElementById("scene-state");
 const sceneScore = document.getElementById("scene-score");
 const sceneMeta = document.getElementById("scene-meta");
+const lockTime = document.getElementById("lock-time");
+
+const formatLockTime = (date) =>
+  date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+
+const syncLockTime = () => {
+  if (!lockTime) {
+    return;
+  }
+
+  lockTime.textContent = formatLockTime(new Date());
+};
+
+const scheduleLockTimeSync = () => {
+  syncLockTime();
+
+  const now = new Date();
+  const delayUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+
+  window.setTimeout(() => {
+    syncLockTime();
+    window.setInterval(syncLockTime, 60_000);
+  }, delayUntilNextMinute);
+};
+
+scheduleLockTimeSync();
 
 for (const button of sceneButtons) {
   button.addEventListener("click", () => {

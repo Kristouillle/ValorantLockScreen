@@ -53,7 +53,7 @@ final class MatchPollingViewModel: ObservableObject {
             return
         }
 
-        let repository = RiotMatchRepository(allowPreviewFallback: settingsStore.previewFallbackEnabled)
+        let repository = RiotMatchRepository()
 
         do {
             let matches = try await repository.fetchMatches(for: settingsStore.trackedTeams)

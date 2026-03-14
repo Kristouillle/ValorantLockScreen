@@ -27,16 +27,6 @@ struct ValorantLockScreenApp: App {
                         await poller.refresh()
                     }
                 }
-                .onChange(of: settingsStore.previewFallbackEnabled) { _, _ in
-                    Task {
-                        await poller.refresh()
-                    }
-                }
-                .onChange(of: settingsStore.backendBaseURLString) { _, _ in
-                    Task {
-                        await poller.refresh()
-                    }
-                }
                 .onChange(of: settingsStore.liveActivitiesEnabled) { _, _ in
                     Task {
                         await poller.applyLiveActivityPreference()

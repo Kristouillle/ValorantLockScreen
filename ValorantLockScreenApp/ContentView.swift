@@ -7,29 +7,6 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section("Backend") {
-                    TextField("Backend URL", text: $settingsStore.backendBaseURLString)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .keyboardType(.URL)
-
-                    Button("Reset Backend URL") {
-                        settingsStore.resetBackendBaseURL()
-                    }
-
-                    Toggle("Allow preview fallback if backend fetch fails", isOn: $settingsStore.previewFallbackEnabled)
-
-                    if let errorMessage = poller.errorMessage {
-                        Text(errorMessage)
-                            .font(.footnote)
-                            .foregroundStyle(.red)
-                    } else {
-                        Text("Using the repo backend for normalized match data. On a physical iPhone, this should point to your Mac's LAN IP or a deployed HTTPS backend.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
                 Section("Display") {
                     Toggle("Use Live Activity on Lock Screen", isOn: $settingsStore.liveActivitiesEnabled)
 
@@ -60,6 +37,12 @@ struct ContentView: View {
                 Section("Current lock screen payload") {
                     CurrentMatchCard(match: poller.liveMatch)
                     CurrentMatchCard(match: poller.nextMatch, title: "Next up")
+
+                    if let errorMessage = poller.errorMessage {
+                        Text(errorMessage)
+                            .font(.footnote)
+                            .foregroundStyle(.red)
+                    }
                 }
 
                 Section("Tracked schedule") {

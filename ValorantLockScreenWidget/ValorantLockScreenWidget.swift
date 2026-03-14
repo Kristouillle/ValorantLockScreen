@@ -128,10 +128,8 @@ struct ScoreWidgetProvider: TimelineProvider {
             return
         }
 
-        let previewFallbackEnabled = defaults.bool(forKey: SettingsStore.Keys.previewFallbackEnabled)
         components.queryItems = [
-            URLQueryItem(name: "teamIds", value: trackedTeamIDs.joined(separator: ",")),
-            URLQueryItem(name: "allowPreviewFallback", value: previewFallbackEnabled ? "true" : "false")
+            URLQueryItem(name: "teamIds", value: trackedTeamIDs.joined(separator: ","))
         ]
 
         guard let url = components.url else {
