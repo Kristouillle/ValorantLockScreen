@@ -696,68 +696,153 @@ const renderSimulatorPage = ({
       <title>Valorant Match Simulator</title>
       <style>
         :root {
-          color-scheme: dark;
-          --bg: #10151d;
-          --panel: #192231;
-          --panel-alt: #243246;
-          --text: #f4f7fb;
-          --muted: #9eb0c8;
-          --accent: #69d4ff;
-          --accent-2: #74f0b8;
+          color-scheme: light;
+          --bg: #f4faf5;
+          --panel: rgba(255, 255, 255, 0.92);
+          --panel-soft: rgba(255, 255, 255, 0.84);
+          --panel-stroke: rgba(6, 146, 86, 0.16);
+          --text: #102118;
+          --muted: #5f7368;
+          --accent: #069256;
+          --accent-strong: #04653c;
+          --shadow: 0 24px 60px rgba(15, 53, 31, 0.08);
+          --copy-font: "Avenir Next", "Segoe UI", sans-serif;
+          --display-font: "Iowan Old Style", "Palatino Linotype", serif;
         }
         * { box-sizing: border-box; }
         body {
           margin: 0;
-          font-family: ui-rounded, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-          background: radial-gradient(circle at top, #20304a 0%, var(--bg) 42%);
+          font-family: var(--copy-font);
+          background:
+            radial-gradient(circle at top left, rgba(6, 146, 86, 0.08), transparent 26%),
+            radial-gradient(circle at 86% 10%, rgba(6, 146, 86, 0.06), transparent 18%),
+            linear-gradient(180deg, #f8fcf8 0%, #f2f8f3 100%);
           color: var(--text);
           min-height: 100vh;
+          position: relative;
+        }
+        body::before {
+          content: "";
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          background-image:
+            linear-gradient(rgba(6, 146, 86, 0.045) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(6, 146, 86, 0.045) 1px, transparent 1px),
+            linear-gradient(rgba(6, 146, 86, 0.085) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(6, 146, 86, 0.085) 1px, transparent 1px);
+          background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+          background-position: 0 0, 0 0, -1px -1px, -1px -1px;
+          opacity: 0.46;
         }
         main {
-          max-width: 1080px;
+          position: relative;
+          z-index: 1;
+          max-width: 1180px;
           margin: 0 auto;
-          padding: 32px 20px 80px;
+          padding: 36px 20px 80px;
         }
-        h1, h2 { margin: 0 0 12px; }
+        h1, h2, p { margin: 0; }
+        h1, h2 {
+          font-family: var(--display-font);
+          line-height: 0.96;
+          letter-spacing: -0.03em;
+        }
         p { color: var(--muted); }
+        .hero-card,
+        .card {
+          border: 1px solid var(--panel-stroke);
+          border-radius: 28px;
+          background:
+            radial-gradient(circle at top left, rgba(255, 255, 255, 0.7), transparent 34%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 250, 246, 0.9)),
+            linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(217, 238, 226, 0.34));
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.72),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.28),
+            var(--shadow);
+        }
+        .hero-card {
+          padding: 34px;
+          margin-bottom: 24px;
+        }
+        .eyebrow {
+          margin-bottom: 12px;
+          color: var(--accent);
+          text-transform: uppercase;
+          letter-spacing: 0.18em;
+          font-size: 0.78rem;
+          font-weight: 700;
+        }
+        .hero-card h1 {
+          font-size: clamp(2.8rem, 8vw, 4.8rem);
+          margin-bottom: 18px;
+        }
+        .hero-copy {
+          display: grid;
+          gap: 12px;
+          max-width: 860px;
+        }
         .grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-          gap: 20px;
+          gap: 24px;
         }
         .status {
           display: flex;
           flex-wrap: wrap;
-          gap: 16px;
-          margin: 0 0 20px;
+          gap: 12px;
+          margin-top: 24px;
+        }
+        .status span {
+          padding: 12px 16px;
+          border-radius: 999px;
+          border: 1px solid var(--panel-stroke);
+          background: rgba(255, 255, 255, 0.72);
           color: var(--muted);
         }
+        .status strong {
+          color: var(--text);
+        }
         .card {
-          background: rgba(25, 34, 49, 0.92);
-          border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 20px;
-          padding: 20px;
-          backdrop-filter: blur(12px);
+          padding: 28px;
+        }
+        .card h2 {
+          font-size: clamp(1.9rem, 4vw, 2.8rem);
+          margin-bottom: 14px;
         }
         label {
           display: grid;
-          gap: 6px;
+          gap: 8px;
           color: var(--muted);
-          font-size: 14px;
+          font-size: 0.95rem;
+          font-weight: 600;
         }
         input, select, button {
-          border-radius: 12px;
-          border: 1px solid rgba(255,255,255,0.12);
-          background: var(--panel-alt);
+          border-radius: 14px;
+          border: 1px solid var(--panel-stroke);
+          background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(245, 250, 247, 0.84));
           color: var(--text);
           font: inherit;
           padding: 12px 14px;
+          width: 100%;
+        }
+        input:focus, select:focus {
+          outline: 2px solid rgba(6, 146, 86, 0.18);
+          outline-offset: 2px;
         }
         button {
-          background: linear-gradient(135deg, var(--accent), var(--accent-2));
-          color: #06101d;
+          width: auto;
+          background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+          color: #f7fdf8;
           font-weight: 700;
           cursor: pointer;
+          transition: transform 180ms ease, box-shadow 180ms ease;
+        }
+        button:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 10px 24px rgba(6, 101, 60, 0.18);
         }
         form.stack {
           display: grid;
@@ -774,19 +859,28 @@ const renderSimulatorPage = ({
           display: grid;
           gap: 8px;
           padding: 16px;
-          background: rgba(255,255,255,0.04);
+          background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 249, 246, 0.78)),
+            linear-gradient(135deg, rgba(255, 255, 255, 0.52), rgba(217, 238, 226, 0.22));
+          border: 1px solid var(--panel-stroke);
           border-radius: 16px;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.64);
         }
         .center {
           text-align: center;
         }
         .score {
-          font-size: 40px;
+          font-size: clamp(2.3rem, 6vw, 3.6rem);
           font-weight: 800;
           line-height: 1;
+          font-family: "SF Mono", "Menlo", monospace;
+          color: var(--accent-strong);
         }
         .map, .series, .meta {
           color: var(--muted);
+        }
+        .meta {
+          margin-bottom: 18px;
         }
         .actions {
           display: flex;
@@ -806,19 +900,41 @@ const renderSimulatorPage = ({
         .inline-form label {
           flex: 1 1 220px;
         }
+        @media (max-width: 720px) {
+          main {
+            padding-top: 20px;
+          }
+          .hero-card,
+          .card {
+            padding: 24px;
+          }
+          .scoreboard {
+            grid-template-columns: 1fr;
+          }
+          .actions form,
+          .actions button,
+          .inline-form button {
+            width: 100%;
+          }
+        }
       </style>
     </head>
     <body>
       <main>
-        <h1>Valorant Match Simulator</h1>
-        <p>Use this to inject a fake live match into the backend feed and test app/widget rendering without waiting for real Riot live data.</p>
-        <p>For remote Live Activity testing, open the app once so it starts the Live Activity and uploads the push token, then lock the phone and use the controls below.</p>
-        <div class="status">
-          <span>APNs configured: <strong>${apnsConfigured ? "yes" : "no"}</strong></span>
-          <span>Widget push configured: <strong>${widgetPushConfigured ? "yes" : "no"}</strong></span>
-          <span>Registered Live Activities: <strong>${registrationCount}</strong></span>
-          <span>Registered Widgets: <strong>${widgetRegistrationCount}</strong></span>
-        </div>
+        <section class="hero-card">
+          <p class="eyebrow">Internal simulator</p>
+          <div class="hero-copy">
+            <h1>Valorant Match Simulator</h1>
+            <p>Inject a fake live match into the backend feed and test app and widget rendering without waiting for real Riot live data.</p>
+            <p>For remote Live Activity testing, open the app once so it starts the Live Activity and uploads the push token, then lock the phone and drive the controls below.</p>
+          </div>
+          <div class="status">
+            <span>APNs configured: <strong>${apnsConfigured ? "yes" : "no"}</strong></span>
+            <span>Widget push configured: <strong>${widgetPushConfigured ? "yes" : "no"}</strong></span>
+            <span>Registered Live Activities: <strong>${registrationCount}</strong></span>
+            <span>Registered Widgets: <strong>${widgetRegistrationCount}</strong></span>
+          </div>
+        </section>
         <div class="grid">
           <section class="card">
             <h2>Create or Replace Simulated Match</h2>
