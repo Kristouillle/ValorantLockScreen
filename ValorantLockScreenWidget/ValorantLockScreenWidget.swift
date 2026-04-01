@@ -1,6 +1,7 @@
 import ActivityKit
 import Foundation
 import SwiftUI
+import UIKit
 import WidgetKit
 
 @main
@@ -23,7 +24,7 @@ private func makeScoreWidgetConfiguration() -> some WidgetConfiguration {
     StaticConfiguration(kind: "ValorantScoreWidget", provider: ScoreWidgetProvider()) { entry in
         ScoreWidgetEntryView(entry: entry)
             .containerBackground(for: .widget) {
-                Color.black.opacity(0.82)
+                Color(uiColor: .systemBackground)
             }
     }
     .configurationDisplayName("Valorant Score")

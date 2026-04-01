@@ -125,15 +125,46 @@ private struct CurrentMatchCard: View {
                 Text(match.eventName)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                HStack {
-                    TeamBadge(team: match.teamA)
-                    Spacer()
-                    Text(match.state == .upcoming ? "vs" : "\(match.score.teamAScore) - \(match.score.teamBScore)")
-                        .font(match.state == .upcoming ? .headline : .title3.monospacedDigit())
-                    Spacer()
-                    TeamBadge(team: match.teamB)
-                }
-                if match.state == .upcoming {
+                if match.state == .live {
+                    HStack(alignment: .top, spacing: 16) {
+                        LiveMatchTeamColumn(
+                            team: match.teamA,
+                            wins: match.score.mapWinsA,
+                            bestOf: match.score.bestOf
+                        )
+
+                        Spacer(minLength: 0)
+
+                        VStack(spacing: 6) {
+                            Text("\(match.score.teamAScore) - \(match.score.teamBScore)")
+                                .font(.title3.monospacedDigit())
+
+                            if let mapName = match.score.mapName {
+                                Text(mapName)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .multilineTextAlignment(.center)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+
+                        Spacer(minLength: 0)
+
+                        LiveMatchTeamColumn(
+                            team: match.teamB,
+                            wins: match.score.mapWinsB,
+                            bestOf: match.score.bestOf
+                        )
+                    }
+                } else if match.state == .upcoming {
+                    HStack {
+                        TeamBadge(team: match.teamA)
+                        Spacer()
+                        Text("vs")
+                            .font(.headline)
+                        Spacer()
+                        TeamBadge(team: match.teamB)
+                    }
                     HStack {
                         if let bestOf = match.score.bestOf {
                             Text("BO\(bestOf)")
@@ -144,6 +175,14 @@ private struct CurrentMatchCard: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 } else {
+                    HStack {
+                        TeamBadge(team: match.teamA)
+                        Spacer()
+                        Text("\(match.score.teamAScore) - \(match.score.teamBScore)")
+                            .font(.title3.monospacedDigit())
+                        Spacer()
+                        TeamBadge(team: match.teamB)
+                    }
                     if let mapName = match.score.mapName {
                         Text(mapName)
                             .font(.caption)
@@ -293,5 +332,68 @@ struct TeamBadge: View {
                 .lineLimit(2)
         }
         .frame(maxWidth: 88)
+    }
+}
+
+private struct LiveMatchTeamColumn: View {
+    let team: Team
+    let wins: Int?
+    let bestOf: Int?
+
+    var body: some View {
+        VStack(spacing: 6) {
+            TeamLogoView(team: team, size: 28)
+                .foregroundStyle(.primary)
+                .frame(width: 44, height: 44)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.secondary.opacity(0.12))
+                )
+
+            if let wins, let bestOf {
+                TeamProgressView(wins: wins, bestOf: bestOf)
+            }
+
+            Text(team.displayName)
+                .font(.caption2)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+        }
+        .frame(maxWidth: 88)
+    }
+}
+
+private struct TeamProgressView: View {
+    let wins: Int
+    let bestOf: Int
+
+    private var requiredWins: Int {
+        max(1, (bestOf / 2) + 1)
+    }
+
+    var body: some View {
+        HStack(spacing: 5) {
+            ForEach(0..<requiredWins, id: \.self) { index in
+                TeamProgressDiamond(filled: index < wins)
+            }
+        }
+        .frame(minHeight: 14)
+    }
+}
+
+private struct TeamProgressDiamond: View {
+    let filled: Bool
+
+    var body: some View {
+        Rectangle()
+            .rotation(Angle(degrees: 45))
+            .fill(filled ? Color.primary : Color.clear)
+            .overlay {
+                Rectangle()
+                    .rotation(Angle(degrees: 45))
+                    .stroke(Color.primary, lineWidth: 1)
+            }
+            .frame(width: 8, height: 8)
+            .padding(2)
     }
 }

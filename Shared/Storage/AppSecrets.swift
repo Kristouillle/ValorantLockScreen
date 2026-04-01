@@ -7,17 +7,9 @@ enum AppSecrets {
     // Default local backend for simulator development. For a physical device,
     // point this to your Mac's LAN IP or a deployed HTTPS endpoint.
     static var backendBaseURL: URL {
-        let defaults = UserDefaults(suiteName: AppGroup.identifier) ?? .standard
-        let stored = defaults.string(forKey: backendBaseURLDefaultsKey)
         let env = ProcessInfo.processInfo.environment["VALORANT_BACKEND_BASE_URL"]
-#if DEBUG
         return resolvedBackendBaseURL(from: env)
             ?? URL(string: defaultBackendBaseURLString)!
-#else
-        return resolvedBackendBaseURL(from: env)
-            ?? resolvedBackendBaseURL(from: stored)
-            ?? URL(string: defaultBackendBaseURLString)!
-#endif
     }
 
     static let defaultBackendBaseURLString = {
@@ -40,11 +32,7 @@ enum AppSecrets {
         if let envURL = resolvedBackendBaseURL(from: env) {
             resolved = envURL.absoluteString
         } else {
-#if DEBUG
             resolved = URL(string: defaultBackendBaseURLString)!.absoluteString
-#else
-            resolved = backendBaseURL.absoluteString
-#endif
         }
 
         if defaults.string(forKey: backendBaseURLDefaultsKey) != resolved {
