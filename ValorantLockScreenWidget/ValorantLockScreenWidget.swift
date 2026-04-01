@@ -163,8 +163,13 @@ struct ScoreWidgetProvider: TimelineProvider {
 
         Task.detached(priority: .background) {
             guard let pushInfo = await WidgetCenter.shared.currentPushInfo else {
+                AppSecrets.appendPushDebugEvent("widget currentPushInfo=nil family=\(familyDescription)")
                 return
             }
+
+            AppSecrets.appendPushDebugEvent(
+                "widget currentPushInfo tokenBytes=\(pushInfo.token.count) family=\(familyDescription)"
+            )
 
             await ScoreWidgetPushRegistrationService().register(
                 token: pushInfo.token,
@@ -515,6 +520,9 @@ struct ScoreWidgetPushHandler: WidgetPushHandler {
     init() {}
 
     func pushTokenDidChange(_ pushInfo: WidgetPushInfo, widgets: [WidgetInfo]) {
+        AppSecrets.appendPushDebugEvent(
+            "widget pushTokenDidChange tokenBytes=\(pushInfo.token.count) widgets=\(widgets.count)"
+        )
         Task.detached(priority: .background) {
             await ScoreWidgetPushRegistrationService().register(token: pushInfo.token, widgets: widgets)
         }
@@ -549,7 +557,17 @@ private actor ScoreWidgetPushRegistrationService {
         request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        _ = try? await session.data(for: request)
+        AppSecrets.appendPushDebugEvent(
+            "widget register sending tokenChars=\(payload.token.count) widgets=\(payload.widgets.count)"
+        )
+
+        do {
+            let (_, response) = try await session.data(for: request)
+            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+            AppSecrets.appendPushDebugEvent("widget register response=\(statusCode)")
+        } catch {
+            AppSecrets.appendPushDebugEvent("widget register error=\(error.localizedDescription)")
+        }
     }
 }
 

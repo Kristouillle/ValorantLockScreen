@@ -3,7 +3,9 @@ import Foundation
 enum LiveMatchResolver {
     static func prioritizedLiveMatch(from matches: [Match], trackedTeamIDs: [String]) -> Match? {
         guard trackedTeamIDs.isEmpty == false else { return nil }
-        let liveMatches = matches.filter { $0.state == .live }
+        let liveMatches = matches.filter { match in
+            match.state == .live && matchInvolvesTrackedTeam(match, trackedTeamIDs: trackedTeamIDs)
+        }
         guard liveMatches.isEmpty == false else { return nil }
 
         return liveMatches.min { lhs, rhs in
@@ -19,7 +21,11 @@ enum LiveMatchResolver {
     static func nextUpcomingMatch(from matches: [Match], trackedTeamIDs: [String], now: Date = .now) -> Match? {
         guard trackedTeamIDs.isEmpty == false else { return nil }
         return matches
-            .filter { $0.state == .upcoming && $0.startTime >= now }
+            .filter { match in
+                match.state == .upcoming &&
+                match.startTime >= now &&
+                matchInvolvesTrackedTeam(match, trackedTeamIDs: trackedTeamIDs)
+            }
             .sorted { lhs, rhs in
                 if lhs.startTime == rhs.startTime {
                     return matchRank(lhs, trackedTeamIDs: trackedTeamIDs) < matchRank(rhs, trackedTeamIDs: trackedTeamIDs)
@@ -27,6 +33,10 @@ enum LiveMatchResolver {
                 return lhs.startTime < rhs.startTime
             }
             .first
+    }
+
+    private static func matchInvolvesTrackedTeam(_ match: Match, trackedTeamIDs: [String]) -> Bool {
+        trackedTeamIDs.contains(match.teamA.id) || trackedTeamIDs.contains(match.teamB.id)
     }
 
     private static func matchRank(_ match: Match, trackedTeamIDs: [String]) -> Int {

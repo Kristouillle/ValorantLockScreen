@@ -32,6 +32,7 @@ Environment variables:
 - `SIMULATOR_PASSWORD`
 - `MAX_REQUEST_BODY_BYTES`
 - `REGISTRATION_TTL_MS`
+- `REGISTRATION_STORE_PATH`
 - `MATCH_REQUEST_LIMIT`
 - `MATCH_REQUEST_WINDOW_MS`
 - `REGISTRATION_REQUEST_LIMIT`
@@ -64,15 +65,17 @@ Set `LOG_MATCH_PAYLOADS=true` if you also want the full JSON envelope printed to
 
 ## Production hardening defaults
 
-- `SIMULATOR_ENABLED` defaults to `false` when `NODE_ENV=production`
+- `SIMULATOR_ENABLED` defaults to `false`; enable it explicitly in your local `backend/.env`
 - if `SIMULATOR_USERNAME` and `SIMULATOR_PASSWORD` are both set, `/simulate` requires HTTP Basic auth
 - POST request bodies are capped by `MAX_REQUEST_BODY_BYTES` (`16384` by default)
-- in-memory push registrations expire after `REGISTRATION_TTL_MS` (`86400000`, or 24 hours, by default)
+- push registrations persist to `REGISTRATION_STORE_PATH` (default: `backend/data/registrations.json`)
+- push registrations still expire after `REGISTRATION_TTL_MS` (`86400000`, or 24 hours, by default)
 - `GET /api/v1/matches` is rate-limited in process via `MATCH_REQUEST_LIMIT` per `MATCH_REQUEST_WINDOW_MS`
 - registration endpoints are rate-limited in process via `REGISTRATION_REQUEST_LIMIT` per `REGISTRATION_REQUEST_WINDOW_MS`
 
 For public deployment, keep `/simulate` disabled unless you explicitly need it for staging or manual testing.
 If you keep `/simulate` enabled in production, protect it with simulator credentials.
+If your production filesystem is ephemeral, point `REGISTRATION_STORE_PATH` at a persistent volume or disk path.
 
 ## Live Activity Pushes
 

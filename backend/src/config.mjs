@@ -2,6 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+const currentFile = fileURLToPath(import.meta.url);
+const backendDirectory = path.resolve(path.dirname(currentFile), "..");
+
 loadDotEnv();
 
 const parseInteger = (value, fallback) => {
@@ -31,11 +34,14 @@ export const config = {
   port: parseInteger(process.env.PORT, 8787),
   cacheTtlMs: parseInteger(process.env.MATCH_CACHE_TTL_MS, 30_000),
   upstreamPollIntervalMs: parseInteger(process.env.UPSTREAM_POLL_INTERVAL_MS, 30_000),
-  simulatorEnabled: parseBoolean(process.env.SIMULATOR_ENABLED, process.env.NODE_ENV !== "production"),
+  simulatorEnabled: parseBoolean(process.env.SIMULATOR_ENABLED, false),
   simulatorUsername: normalizeString(process.env.SIMULATOR_USERNAME),
   simulatorPassword: normalizeString(process.env.SIMULATOR_PASSWORD),
   maxRequestBodyBytes: parseInteger(process.env.MAX_REQUEST_BODY_BYTES, 16_384),
   registrationTtlMs: parseInteger(process.env.REGISTRATION_TTL_MS, 24 * 60 * 60 * 1_000),
+  registrationStorePath:
+    normalizeString(process.env.REGISTRATION_STORE_PATH) ??
+    path.resolve(backendDirectory, "data", "registrations.json"),
   matchRequestLimit: parseInteger(process.env.MATCH_REQUEST_LIMIT, 120),
   matchRequestWindowMs: parseInteger(process.env.MATCH_REQUEST_WINDOW_MS, 60_000),
   registrationRequestLimit: parseInteger(process.env.REGISTRATION_REQUEST_LIMIT, 30),
@@ -62,8 +68,7 @@ function normalizePrivateKey(value) {
 }
 
 function loadDotEnv() {
-  const currentFile = fileURLToPath(import.meta.url);
-  const envPath = path.resolve(path.dirname(currentFile), "..", ".env");
+  const envPath = path.resolve(backendDirectory, ".env");
 
   if (!fs.existsSync(envPath)) {
     return;

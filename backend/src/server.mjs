@@ -5,6 +5,7 @@ import { APNSLiveActivityService } from "./apnsLiveActivityService.mjs";
 import { createLogger, summarizeMatches } from "./logger.mjs";
 import { LiveActivityRegistryService } from "./liveActivityRegistryService.mjs";
 import { MatchFeedService } from "./matchFeedService.mjs";
+import { RegistrationStore } from "./registrationStore.mjs";
 import { FixedWindowRateLimiter } from "./rateLimiterService.mjs";
 import { RiotScheduleService } from "./riotScheduleService.mjs";
 import { SimulatorService } from "./simulatorService.mjs";
@@ -14,15 +15,26 @@ const logger = createLogger({
   level: config.logLevel
 });
 
+const registrationStore = new RegistrationStore({
+  filePath: config.registrationStorePath,
+  logger
+});
+
 const liveActivityRegistry = new LiveActivityRegistryService({
   registrationTtlMs: config.registrationTtlMs,
-  logger
+  logger,
+  onMutation: persistRegistrations
 });
 
 const widgetPushRegistry = new WidgetPushRegistryService({
   registrationTtlMs: config.registrationTtlMs,
-  logger
+  logger,
+  onMutation: persistRegistrations
 });
+
+const persistedRegistrations = await registrationStore.load();
+liveActivityRegistry.restore(persistedRegistrations.liveActivities);
+widgetPushRegistry.restore(persistedRegistrations.widgets);
 
 const apnsLiveActivityService = new APNSLiveActivityService({
   environment: config.apnsEnvironment,
@@ -59,6 +71,13 @@ const registrationRateLimiter = new FixedWindowRateLimiter({
   limit: config.registrationRequestLimit,
   windowMs: config.registrationRequestWindowMs
 });
+
+function persistRegistrations() {
+  void registrationStore.save({
+    liveActivities: liveActivityRegistry.snapshot(),
+    widgets: widgetPushRegistry.snapshot()
+  });
+}
 
 const server = http.createServer(async (request, response) => {
   const requestID = randomUUID().slice(0, 8);
@@ -276,6 +295,7 @@ server.listen(config.port, config.host, () => {
     simulatorAuthConfigured: isSimulatorAuthConfigured(),
     maxRequestBodyBytes: config.maxRequestBodyBytes,
     registrationTtlMs: config.registrationTtlMs,
+    registrationStorePath: config.registrationStorePath,
     matchRequestLimit: config.matchRequestLimit,
     matchRequestWindowMs: config.matchRequestWindowMs,
     registrationRequestLimit: config.registrationRequestLimit,

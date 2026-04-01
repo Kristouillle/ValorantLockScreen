@@ -32,7 +32,7 @@ final class LiveMatchResolverTests: XCTestCase {
         XCTAssertEqual(resolved?.id, "two")
     }
 
-    func testNextUpcomingMatchChoosesEarliestStart() {
+    func testNextUpcomingMatchIgnoresUntrackedMatches() {
         let teams = Team.catalog
         let now = Date()
         let later = Match(
@@ -60,6 +60,40 @@ final class LiveMatchResolverTests: XCTestCase {
 
         let resolved = LiveMatchResolver.nextUpcomingMatch(from: [later, sooner], trackedTeamIDs: [teams[0].id], now: now)
 
-        XCTAssertEqual(resolved?.id, "sooner")
+        XCTAssertEqual(resolved?.id, "later")
+    }
+
+    func testPrioritizedLiveMatchIgnoresUntrackedMatches() {
+        let teams = Team.catalog
+        let now = Date()
+        let unrelatedLive = Match(
+            id: "unrelated",
+            eventName: "Unrelated",
+            startTime: now,
+            teamA: teams[2],
+            teamB: teams[3],
+            state: .live,
+            score: .zero,
+            source: "test",
+            lastUpdated: now
+        )
+        let trackedLive = Match(
+            id: "tracked",
+            eventName: "Tracked",
+            startTime: now.addingTimeInterval(-60),
+            teamA: teams[0],
+            teamB: teams[4],
+            state: .live,
+            score: .zero,
+            source: "test",
+            lastUpdated: now
+        )
+
+        let resolved = LiveMatchResolver.prioritizedLiveMatch(
+            from: [unrelatedLive, trackedLive],
+            trackedTeamIDs: [teams[0].id]
+        )
+
+        XCTAssertEqual(resolved?.id, "tracked")
     }
 }

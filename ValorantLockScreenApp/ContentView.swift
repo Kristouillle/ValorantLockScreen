@@ -69,6 +69,29 @@ struct ContentView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+
+#if DEBUG
+                Section("Debug") {
+                    Text(AppSecrets.debugSummary)
+                        .font(.caption2.monospaced())
+                        .textSelection(.enabled)
+
+                    Text(AppSecrets.pushDebugSummary)
+                        .font(.caption2.monospaced())
+                        .textSelection(.enabled)
+
+                    Button("Force Local Backend") {
+                        AppSecrets.forceDebugLocalBackendBaseURL()
+                        Task {
+                            await poller.refresh()
+                        }
+                    }
+
+                    Button("Clear Push Debug Log") {
+                        AppSecrets.clearPushDebugEvents()
+                    }
+                }
+#endif
             }
             .navigationTitle("Valorant Lock Screen")
             .toolbar {

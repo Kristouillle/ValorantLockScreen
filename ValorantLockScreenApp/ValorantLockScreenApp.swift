@@ -12,6 +12,7 @@ struct ValorantLockScreenApp: App {
                 .environmentObject(settingsStore)
                 .environmentObject(poller)
                 .task {
+                    AppSecrets.syncBackendBaseURLToSharedDefaults()
                     await poller.configure(with: settingsStore)
                     await poller.refresh()
                 }

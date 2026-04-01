@@ -7,11 +7,15 @@ actor LiveActivityCoordinator {
     private let registrationService = LiveActivityPushRegistrationService()
 
     func update(using match: Match?, trackedTeamIDs: [String]) async {
-        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
+        guard ActivityAuthorizationInfo().areActivitiesEnabled else {
+            AppSecrets.appendPushDebugEvent("live activities disabled by system")
+            return
+        }
 
         let activities = Activity<ScoreActivityAttributes>.activities
 
         guard let match else {
+            AppSecrets.appendPushDebugEvent("live update no match; ending \(activities.count) activities")
             for activity in activities {
                 await unregister(activityID: activity.id)
                 await Self.endActivity(activityID: activity.id)
@@ -31,13 +35,14 @@ actor LiveActivityCoordinator {
         )
 
         if let activity = activities.first(where: { $0.content.state.matchID == match.id }) {
+            AppSecrets.appendPushDebugEvent("live update existing activity id=\(activity.id)")
             ensurePushTokenObservation(for: activity.id, match: match, trackedTeamIDs: trackedTeamIDs)
-            if pushTokensByActivityID[activity.id] == nil {
-                await Self.updateActivity(
-                    activityID: activity.id,
-                    contentState: contentState
-                )
-            }
+            // Keep the on-device Live Activity in sync even after a push token
+            // has been registered. Remote pushes are additive, not exclusive.
+            await Self.updateActivity(
+                activityID: activity.id,
+                contentState: contentState
+            )
 
             for staleActivity in activities where staleActivity.id != activity.id {
                 await unregister(activityID: staleActivity.id)
@@ -46,23 +51,33 @@ actor LiveActivityCoordinator {
             return
         }
 
+        AppSecrets.appendPushDebugEvent("live requesting new tokenized activity for match=\(match.id)")
         for activity in activities {
             await unregister(activityID: activity.id)
             await Self.endActivity(activityID: activity.id)
         }
 
-        if let activity = try? Activity.request(
-            attributes: attributes,
-            content: ActivityContent(state: contentState, staleDate: Date().addingTimeInterval(15 * 60)),
-            pushType: .token
-        ) {
+        do {
+            let activity = try Activity.request(
+                attributes: attributes,
+                content: ActivityContent(state: contentState, staleDate: Date().addingTimeInterval(15 * 60)),
+                pushType: .token
+            )
+            AppSecrets.appendPushDebugEvent("live request success activityID=\(activity.id) pushType=token")
             ensurePushTokenObservation(for: activity.id, match: match, trackedTeamIDs: trackedTeamIDs)
-        } else {
-            _ = try? Activity.request(
+        } catch {
+            AppSecrets.appendPushDebugEvent(
+                "live request failed pushType=token error=\(error.localizedDescription)"
+            )
+            if let activity = try? Activity.request(
                 attributes: attributes,
                 content: ActivityContent(state: contentState, staleDate: Date().addingTimeInterval(15 * 60)),
                 pushType: nil
-            )
+            ) {
+                AppSecrets.appendPushDebugEvent("live request success activityID=\(activity.id) pushType=nil")
+            } else {
+                AppSecrets.appendPushDebugEvent("live request failed pushType=nil")
+            }
         }
     }
 
@@ -92,6 +107,7 @@ actor LiveActivityCoordinator {
         registrationService: LiveActivityPushRegistrationService
     ) async {
         pushTokensByActivityID[activityID] = token
+        AppSecrets.appendPushDebugEvent("live push token received activityID=\(activityID) tokenChars=\(token.count)")
         await registrationService.register(
             token: token,
             activityID: activityID,
@@ -105,6 +121,7 @@ actor LiveActivityCoordinator {
         tokenTasks[activityID] = nil
 
         guard let token = pushTokensByActivityID.removeValue(forKey: activityID) else { return }
+        AppSecrets.appendPushDebugEvent("live unregister activityID=\(activityID)")
         await registrationService.unregister(token: token, activityID: activityID)
     }
 
@@ -214,7 +231,17 @@ private actor LiveActivityPushRegistrationService {
         request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        _ = try? await session.data(for: request)
+        AppSecrets.appendPushDebugEvent("live register sending path=\(path)")
+
+        do {
+            let (_, response) = try await session.data(for: request)
+            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+            AppSecrets.appendPushDebugEvent("live register response path=\(path) status=\(statusCode)")
+        } catch {
+            AppSecrets.appendPushDebugEvent(
+                "live register error path=\(path) error=\(error.localizedDescription)"
+            )
+        }
     }
 }
 
